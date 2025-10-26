@@ -1,0 +1,93 @@
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Entorno
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+build/
+out/
+*.tgz
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+!.vscode/extensions.json
+.idea/
+.idea_modules/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+.project
+.pydevproject
+.settings/
+*.sublime-package
+.nvmrc.swp
+
+# IDE
+*.iml
+*.ipr
+*.iws
+.vscode-test
+.history
+
+# Runtime
+node_modules
+.cache/
+.next/
+.nuxt/
+dist/
+build/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.DS_Store
+*.pem
+.env.local
+.env.*.local
+
+# Temporal
+tmp/
+temp/
+*.tmp
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS generated files
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db

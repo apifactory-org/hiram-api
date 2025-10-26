@@ -1,0 +1,702 @@
+openapi: 3.0.3
+info:
+  title: hiram-api
+  version: 1.0.0-alpha
+  description: Permite crear y gestionar workspaces con especificaciones agnósticas, editando archivos, validando contenido y obteniendo cambios en tiempo real.
+  contact:
+    name: Miguel Angel Céspedes Fernandez
+    email: miguelcespedes@outlook.com
+    url: https://github.com/apifactory-org/hiram-api
+  license:
+    name: MIT
+  termsOfService: https://github.com/apifactory-org/hiram-api/blob/main/TERMS.md
+servers:
+  - url: http://127.0.0.1:8080
+    description: Servidor local de desarrollo
+  - url: https://hiram-secure.apifactory.org
+    description: Servidor de producción
+tags:
+  - name: Workspaces
+  - name: Files
+  - name: Validation
+  - name: Realtime
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT requerido para autenticación
+  responses:
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    WorkspaceType:
+      type: object
+      required:
+        - id
+        - name
+        - latestVersion
+      properties:
+        id:
+          type: string
+          example: asyncapi
+          description: Identificador único del tipo (asyncapi, protobuf, graphql, etc)
+        name:
+          type: string
+          example: AsyncAPI
+          description: Nombre legible del tipo
+        description:
+          type: string
+          example: Especificación para APIs asincrónicas basadas en eventos
+          description: Descripción del tipo de especificación
+        latestVersion:
+          type: string
+          example: "2.6.0"
+          description: Última versión soportada del tipo
+        supportedVersions:
+          type: array
+          items:
+            type: string
+          example: ["2.0.0", "2.6.0"]
+          description: Todas las versiones soportadas del tipo
+    Workspace:
+      type: object
+      required:
+        - workspaceId
+        - name
+        - repo
+        - metadata
+        - createdAt
+        - updatedAt
+        - status
+      properties:
+        workspaceId:
+          type: string
+          example: user-service
+          description: ID único del workspace (slug)
+        name:
+          type: string
+          example: User Service API
+          description: Nombre legible del workspace
+        repo:
+          type: string
+          example: org/user-service-spec
+          description: Referencia del repositorio
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp de creación
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp de última actualización
+        status:
+          type: string
+          enum:
+            - active
+            - archived
+          default: active
+          description: Estado del workspace
+        metadata:
+          $ref: "#/components/schemas/WorkspaceMetadata"
+    WorkspaceMetadata:
+      type: object
+      required:
+        - typeId
+        - specVersion
+        - entry
+      properties:
+        typeId:
+          type: string
+          example: asyncapi
+          description: Identificador del tipo de especificación (referencia a WorkspaceType.id)
+        specVersion:
+          type: string
+          description: Versión específica del tipo (ej. 3.0.3 para OpenAPI, 2.6.0 para AsyncAPI)
+          example: "2.0.0"
+        entry:
+          type: string
+          description: Archivo raíz/principal de la especificación
+          example: api.yaml
+        description:
+          type: string
+          example: API de servicio de usuarios
+        tags:
+          type: array
+          items:
+            type: string
+          description: Etiquetas para categorizar el workspace
+        visibility:
+          type: string
+          enum:
+            - private
+            - public
+          default: private
+          description: Visibilidad del workspace
+        sizeBytes:
+          type: integer
+          description: Tamaño aproximado del workspace en bytes
+        lastValidatedAt:
+          type: string
+          format: date-time
+          description: Última fecha de validación exitosa
+        template:
+          type: string
+          description: Repositorio plantilla usado al crear el workspace
+          example: org/template-asyncapi
+    CreateWorkspaceRequest:
+      type: object
+      required:
+        - name
+        - slug
+        - metadata
+      properties:
+        name:
+          type: string
+          example: User Service API
+          description: Nombre del workspace
+        slug:
+          type: string
+          example: user-service
+          description: Slug único para el workspace
+        metadata:
+          $ref: "#/components/schemas/WorkspaceMetadata"
+    UpdateWorkspaceRequest:
+      type: object
+      description: Solicitud para actualizar un workspace
+      properties:
+        name:
+          type: string
+          description: Nuevo nombre del workspace
+        status:
+          type: string
+          enum:
+            - active
+            - archived
+          description: Nuevo estado
+        metadata:
+          type: object
+          description: Metadata a actualizar
+          properties:
+            description:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+            entry:
+              type: string
+            visibility:
+              type: string
+              enum:
+                - private
+                - public
+            specVersion:
+              type: string
+    TreeResponse:
+      type: object
+      properties:
+        ref:
+          type: string
+          example: main
+        tree:
+          type: array
+          items:
+            type: object
+            required:
+              - type
+              - name
+              - path
+            properties:
+              type:
+                type: string
+                enum:
+                  - dir
+                  - file
+              name:
+                type: string
+              path:
+                type: string
+              sha:
+                type: string
+                nullable: true
+              size:
+                type: integer
+                nullable: true
+    FileReadResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        sha:
+          type: string
+        content:
+          type: string
+        bundled:
+          type: object
+          nullable: true
+          additionalProperties: true
+    FileSaveRequest:
+      type: object
+      required:
+        - path
+        - content
+      properties:
+        path:
+          type: string
+          example: src/schemas.yaml
+          description: Ruta relativa del archivo
+        content:
+          type: string
+        message:
+          type: string
+          example: "chore: update schemas"
+        branch:
+          type: string
+          default: main
+        sha:
+          type: string
+    FileSaveResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        commit:
+          type: object
+          properties:
+            sha:
+              type: string
+            url:
+              type: string
+        newSha:
+          type: string
+    FileMoveRequest:
+      type: object
+      required:
+        - from
+        - to
+      properties:
+        from:
+          type: string
+          example: src/old-name.yaml
+          description: Ruta actual del archivo/carpeta
+        to:
+          type: string
+          example: src/new-name.yaml
+          description: Nueva ruta destino
+        message:
+          type: string
+          example: "refactor: rename paths"
+    ValidateRequest:
+      type: object
+      properties:
+        ref:
+          type: string
+          default: main
+        entry:
+          type: string
+          example: api.yaml
+    ValidateResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              message:
+                type: string
+        warnings:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              message:
+                type: string
+    BasicOk:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          example: CONFLICT
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+security:
+  - bearerAuth: []
+paths:
+  /workspace-types:
+    get:
+      tags:
+        - Workspaces
+      summary: Listar tipos de especificaciones soportadas
+      description: Retorna los tipos de especificaciones que hiram-api soporta
+      responses:
+        "200":
+          description: Lista de tipos de workspace disponibles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WorkspaceType"
+  /workspaces:
+    get:
+      tags:
+        - Workspaces
+      summary: Listar workspaces del usuario autenticado
+      responses:
+        "200":
+          description: Lista de workspaces
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Workspace"
+    post:
+      tags:
+        - Workspaces
+      summary: Crear workspace (repo desde plantilla) con metadata
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWorkspaceRequest"
+      responses:
+        "201":
+          description: Workspace creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "409":
+          description: Slug ya existe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /workspaces/{workspaceId}:
+    parameters:
+      - name: workspaceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: user-service
+    get:
+      tags:
+        - Workspaces
+      summary: Obtener un workspace (incluye metadata)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Workspaces
+      summary: Actualizar metadata del workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateWorkspaceRequest"
+      responses:
+        "200":
+          description: Workspace actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+    delete:
+      tags:
+        - Workspaces
+      summary: Eliminar/archivar workspace (soft-delete recomendado)
+      responses:
+        "204":
+          description: Workspace eliminado o archivado
+  /workspaces/{workspaceId}/files:
+    parameters:
+      - name: workspaceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: user-service
+      - name: ref
+        in: query
+        required: false
+        schema:
+          type: string
+          default: main
+    get:
+      tags:
+        - Files
+      summary: Obtener árbol de archivos del workspace
+      responses:
+        "200":
+          description: Árbol de archivos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /workspaces/{workspaceId}/files/content:
+    parameters:
+      - name: workspaceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: user-service
+      - name: ref
+        in: query
+        required: false
+        schema:
+          type: string
+          default: main
+      - name: path
+        in: query
+        required: true
+        schema:
+          type: string
+          example: src/api.yaml
+    get:
+      tags:
+        - Files
+      summary: Leer contenido de un archivo
+      responses:
+        "200":
+          description: Contenido del archivo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileReadResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - Files
+      summary: Crear o actualizar archivo (con commit)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileSaveRequest"
+      responses:
+        "200":
+          description: Archivo guardado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileSaveResponse"
+        "409":
+          description: Conflicto de versión (SHA desactualizado)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - Files
+      summary: Eliminar un archivo
+      parameters:
+        - in: header
+          name: If-Match
+          required: false
+          schema:
+            type: string
+            example: abc123def456
+        - in: header
+          name: X-Commit-Message
+          required: false
+          schema:
+            type: string
+            example: "chore: remove file"
+      responses:
+        "200":
+          description: Archivo eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicOk"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Conflicto de versión (If-Match no coincide)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /workspaces/{workspaceId}/files/move:
+    parameters:
+      - name: workspaceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: user-service
+    patch:
+      tags:
+        - Files
+      summary: Mover o renombrar un archivo o carpeta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileMoveRequest"
+      responses:
+        "200":
+          description: Archivo movido/renombrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicOk"
+        "404":
+          description: Archivo de origen no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflicto (ej. destino ya existe)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /workspaces/{workspaceId}/validate:
+    parameters:
+      - name: workspaceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: user-service
+    post:
+      tags:
+        - Validation
+      summary: Validar la especificación del workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateRequest"
+      responses:
+        "200":
+          description: Resultado de validación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateResponse"
+        "404":
+          description: Workspace no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /workspaces/{workspaceId}/bundle:
+    parameters:
+      - name: workspaceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: user-service
+      - name: ref
+        in: query
+        required: false
+        schema:
+          type: string
+          default: main
+    get:
+      tags:
+        - Validation
+      summary: Generar bundle resolviendo referencias internas ($ref)
+      parameters:
+        - in: query
+          name: entry
+          required: false
+          schema:
+            type: string
+            example: api.yaml
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum:
+              - json
+              - yaml
+            default: json
+      responses:
+        "200":
+          description: Bundle generado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+            application/yaml:
+              schema:
+                type: string
+        "404":
+          description: Workspace o archivo de entrada no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /events:
+    get:
+      tags:
+        - Realtime
+      summary: Suscribirse a notificaciones en tiempo real (SSE)
+      security: []
+      parameters:
+        - in: query
+          name: workspace
+          required: false
+          schema:
+            type: string
+            example: user-service
+      responses:
+        "200":
+          description: Conexión SSE establecida
+          content:
+            text/event-stream:
+              schema:
+                type: string
