@@ -1,34 +1,21 @@
-# Changelog - hiram-api
+# Changelog
 
-Todos los cambios notables en este proyecto serán documentados en este archivo.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-El formato está basado en [Keep a Changelog](https://keepachangelog.com/),
-y este proyecto sigue [Semantic Versioning](https://semver.org/).
+## 0.1.0 (2025-10-26)
 
----
 
-## [Unreleased]
+### Features
 
-### Planeado
-- 🔜 Implementación del backend
-- 🔜 Autenticación JWT
-- 🔜 Gestión de workspaces
-- 🔜 Editor de archivos
-- 🔜 Validación de especificaciones
-- 🔜 Bundling de referencias ($ref)
-- 🔜 Notificaciones SSE
-- 🔜 Frontend Web UI
-- 🔜 CLI client
-
-### En Investigación
-- 🔍 Soporte para GraphQL Schema
-- 🔍 Soporte para Protocol Buffers
-- 🔍 Soporte para RAML
-- 🔍 Colaboración en tiempo real
-- 🔍 Análisis y métricas
-- 🔍 Generación de código
-
----
+* bootstrap hiram-api 1.0.0-alpha specification ([54dd407](https://github.com/apifactory-org/hiram-api/commit/54dd4074c315c624b4520edae1b45dbcff7cfa54))
+* bootstrap hiram-api 1.0.0-alpha specification ([3c831f4](https://github.com/apifactory-org/hiram-api/commit/3c831f43d25e0f7194ecfd0ba519f3f24cbdaf02))
+* bootstrap hiram-api 1.0.0-alpha specification ([82630a3](https://github.com/apifactory-org/hiram-api/commit/82630a3772381d47d42eed57da5d6643e5395ac3))
+* bootstrap hiram-api 1.0.0-alpha specification ([3353425](https://github.com/apifactory-org/hiram-api/commit/33534259dedfc1612c40b19799840f56265fa048))
+* bootstrap hiram-api 1.0.0-alpha specification ([b2d17ed](https://github.com/apifactory-org/hiram-api/commit/b2d17ed76766d59b9ffff825a7211561c6f90819))
+* bootstrap hiram-api 1.0.0-alpha specification ([3d56f76](https://github.com/apifactory-org/hiram-api/commit/3d56f76ad3f22c6b1d68b7ae4a59caa812a49223))
+* bootstrap hiram-api 1.0.0-alpha specification ([3001a89](https://github.com/apifactory-org/hiram-api/commit/3001a89ac4c65461478ed11dfb0cc5cc94d49277))
+* bootstrap hiram-api 1.0.0-alpha specification ([44a253b](https://github.com/apifactory-org/hiram-api/commit/44a253bce650e4a3ab1f225378d7e35e9bc6cad5))
+* **test:** prueba de automatización de versiones ([fecd40b](https://github.com/apifactory-org/hiram-api/commit/fecd40b296d4d186d64f242f16a606930dfea303))
 
 ## [0.1.0-alpha] - 2025-10-01
 
