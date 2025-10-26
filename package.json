@@ -3,5 +3,12 @@
   "version": "0.1.0-alpha",
   "description": "Plataforma agnóstica para editar y validar especificaciones de APIs",
   "repository": "github:apifactory-org/hiram-api",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "release": "standard-version"
+  },
+  "devDependencies": {
+    "js-yaml": "^4.1.0",
+    "standard-version": "^9.5.0"
+  }
 }
