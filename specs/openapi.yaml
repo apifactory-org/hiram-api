@@ -6,10 +6,14 @@ info:
   contact:
     name: Miguel Angel Céspedes Fernandez
     email: miguelcespedes@outlook.com
-    url: https://github.com/miguelcespedes
+    url: https://github.com/apifactory-org/hiram-api
   license:
     name: MIT
-  termsOfService: https://github.com/apifactory-org/hiram-api/blob/main/LICENSE
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://github.com/apifactory-org/hiram-api/blob/main/TERMS.md
+  externalDocs:
+    url: https://github.com/apifactory-org/hiram-api
+    description: Repositorio oficial y documentación
 servers:
   - url: http://127.0.0.1:8080
     description: Servidor local de desarrollo
@@ -17,9 +21,25 @@ servers:
     description: Servidor de producción
 tags:
   - name: Workspaces
+    description: Operaciones para crear, listar y gestionar workspaces
+    externalDocs:
+      url: https://github.com/apifactory-org/hiram-api/docs/workspaces
+      description: Documentación de Workspaces
   - name: Files
+    description: Operaciones para leer, escribir y organizar archivos dentro de workspaces
+    externalDocs:
+      url: https://github.com/apifactory-org/hiram-api/docs/files
+      description: Documentación de Archivos
   - name: Validation
+    description: Operaciones para validar especificaciones y generar bundles
+    externalDocs:
+      url: https://github.com/apifactory-org/hiram-api/docs/validation
+      description: Documentación de Validación
   - name: Realtime
+    description: Conexiones en tiempo real para notificaciones de cambios
+    externalDocs:
+      url: https://github.com/apifactory-org/hiram-api/docs/realtime
+      description: Documentación de Tiempo Real
 components:
   securitySchemes:
     bearerAuth:
@@ -34,6 +54,43 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+          example:
+            code: NOT_FOUND
+            message: El workspace no existe
+            details: {}
+    BadRequest:
+      description: Solicitud inválida
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: BAD_REQUEST
+            message: Parámetros inválidos en la solicitud
+            details:
+              field: slug
+              reason: Solo caracteres alfanuméricos y guiones
+    Unauthorized:
+      description: No autenticado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: UNAUTHORIZED
+            message: Token JWT inválido o expirado
+            details: {}
+    Conflict:
+      description: Conflicto en la solicitud
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: CONFLICT
+            message: El workspace ya existe
+            details:
+              slug: user-service
   schemas:
     WorkspaceType:
       type: object
@@ -117,7 +174,7 @@ components:
           description: Identificador del tipo de especificación (referencia a WorkspaceType.id)
         specVersion:
           type: string
-          description: Versión específica del tipo (ej. 3.0.3 para OpenAPI, 2.6.0 para AsyncAPI)
+          description: Versión específica del tipo (ej. 3.0.3 para OAS3, 2.6.0 para AsyncAPI)
           example: "2.0.0"
         entry:
           type: string
@@ -380,6 +437,20 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Workspace"
+              example:
+                items:
+                  - workspaceId: user-service
+                    name: User Service API
+                    repo: org/user-service-spec
+                    createdAt: "2025-10-01T10:30:00Z"
+                    updatedAt: "2025-10-01T10:30:00Z"
+                    status: active
+                    metadata:
+                      typeId: asyncapi
+                      specVersion: 2.0.0
+                      entry: api.yaml
+        "401":
+          $ref: "#/components/responses/Unauthorized"
     post:
       tags:
         - Workspaces
@@ -390,6 +461,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateWorkspaceRequest"
+            example:
+              name: User Service API
+              slug: user-service
+              metadata:
+                typeId: asyncapi
+                specVersion: 2.0.0
+                entry: api.yaml
+                description: API de servicio de usuarios
       responses:
         "201":
           description: Workspace creado
@@ -397,12 +476,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Workspace"
+              example:
+                workspaceId: user-service
+                name: User Service API
+                repo: org/user-service-spec
+                createdAt: "2025-10-01T10:30:00Z"
+                updatedAt: "2025-10-01T10:30:00Z"
+                status: active
+                metadata:
+                  typeId: asyncapi
+                  specVersion: 2.0.0
+                  entry: api.yaml
         "409":
-          description: Slug ya existe
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/Conflict"
   /workspaces/{workspaceId}:
     parameters:
       - name: workspaceId
@@ -422,6 +508,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Workspace"
+              example:
+                workspaceId: user-service
+                name: User Service API
+                repo: org/user-service-spec
+                createdAt: "2025-10-01T10:30:00Z"
+                updatedAt: "2025-10-01T10:30:00Z"
+                status: active
+                metadata:
+                  typeId: asyncapi
+                  specVersion: 2.0.0
+                  entry: api.yaml
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
     patch:
@@ -518,6 +617,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/FileSaveRequest"
+            example:
+              path: src/api.yaml
+              content: "asyncapi: 2.0.0\ninfo:\n  title: User Service\n  version: 1.0.0"
+              message: "feat: add user service spec"
+              branch: main
       responses:
         "200":
           description: Archivo guardado correctamente
@@ -525,12 +629,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FileSaveResponse"
+              example:
+                ok: true
+                commit:
+                  sha: abc123def456
+                  url: https://github.com/org/user-service-spec/commit/abc123def456
+                newSha: abc123def456
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "409":
-          description: Conflicto de versión (SHA desactualizado)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/Conflict"
     delete:
       tags:
         - Files
@@ -555,14 +663,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BasicOk"
+              example:
+                ok: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
         "409":
-          description: Conflicto de versión (If-Match no coincide)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/Conflict"
   /workspaces/{workspaceId}/files/move:
     parameters:
       - name: workspaceId
@@ -612,12 +720,18 @@ paths:
       tags:
         - Validation
       summary: Validar la especificación del workspace
+      description: >
+        Valida la especificación según su tipo (OAS3 o AsyncAPI).
+        El backend selecciona automáticamente el validador basado en `metadata.type`.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/ValidateRequest"
+            example:
+              ref: main
+              entry: api.yaml
       responses:
         "200":
           description: Resultado de validación
@@ -625,12 +739,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ValidateResponse"
+              example:
+                valid: true
+                errors: []
+                warnings: []
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "404":
-          description: Workspace no encontrado
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/NotFound"
   /workspaces/{workspaceId}/bundle:
     parameters:
       - name: workspaceId
