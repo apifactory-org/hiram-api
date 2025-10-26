@@ -25,22 +25,22 @@ tags:
   - name: Workspaces
     description: Operaciones para crear, listar y gestionar workspaces
     externalDocs:
-      url: #Workspaces
+      url: https://apifactory-org.github.io/hiram-api#Workspaces
       description: Documentación de Workspaces
   - name: Files
     description: Operaciones para leer, escribir y organizar archivos dentro de workspaces
     externalDocs:
-      url: #Files
+      url: https://apifactory-org.github.io/hiram-api#Files
       description: Documentación de Archivos
   - name: Validation
     description: Operaciones para validar especificaciones y generar bundles
     externalDocs:
-      url: #Validation
+      url: https://apifactory-org.github.io/hiram-api#Validation
       description: Documentación de Validación
   - name: Realtime
     description: Conexiones en tiempo real para notificaciones de cambios
     externalDocs:
-      url: #Realtime
+      url: https://apifactory-org.github.io/hiram-api#Realtime
       description: Documentación de Tiempo Real
 components:
   securitySchemes:
