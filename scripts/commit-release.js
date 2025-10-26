@@ -1,69 +1,56 @@
 // scripts/commit-release.js
 /**
- * Script para hacer commit, release y push automático
+ * Flujo con 2 commits:
+ *  1) Tu commit (feat/fix/docs...)
+ *  2) Commit de release automático de standard-version + tag
  *
  * Uso: npm run publish -- "TYPE(scope): descripción"
- *
- * Ejemplos:
- *   npm run publish -- "feat(validator): agregar validación de tipos"
- *   npm run publish -- "fix(parser): corregir error en parsing YAML"
- *   npm run publish -- "docs(readme): actualizar instrucciones"
- *
- * Automáticamente:
- *   1. Hace git add . (agrega todos los cambios pendientes)
- *   2. Commitea con el mensaje en convención
- *   3. Ejecuta standard-version (incrementa VERSION, package.json, crea CHANGELOG)
- *   4. Ejecuta sync-version.js via hook precommit (sincroniza openapi.yaml)
- *   5. Hace git push (sube commits y tags a GitHub)
- *
- * Nota: No edita openapi.yaml. Eso lo hace sync-version.js automáticamente
  */
 
-// Importar módulo para ejecutar comandos del sistema
-const { execSync } = require("child_process");
+const { spawnSync } = require("child_process");
 
-// Obtener el mensaje del commit del argumento pasado
-// Ejemplo: npm run publish -- "feat(validator): mi función"
-// process.argv[2] = "feat(validator): mi función"
+function run(cmd, args = []) {
+  const res = spawnSync(cmd, args, { stdio: "inherit", shell: false });
+  if (res.status !== 0) {
+    const msg = `${cmd} ${args.join(" ")} failed with code ${res.status}`;
+    throw new Error(msg);
+  }
+}
+
 const message = process.argv[2];
-
-// Validar que se proporcionó un mensaje
 if (!message) {
   console.error("Error: Debes proporcionar un mensaje de commit");
   console.error('Uso: npm run publish -- "tu mensaje"');
-  console.error("");
-  console.error("Ejemplos:");
-  console.error('  npm run publish -- "feat(validator): nueva funcionalidad"');
-  console.error('  npm run publish -- "fix(parser): arreglar bug"');
-  console.error('  npm run publish -- "docs(api): actualizar documentación"');
   process.exit(1);
 }
 
 try {
-  // Paso 1: Agregar todos los cambios al staging
+  // 1) add y commit de TU cambio (solo si hay algo para comitear)
   console.log("Adding files...");
-  execSync("git add .", { stdio: "inherit" });
+  run("git", ["add", "."]);
 
-  // Paso 2: Hacer commit con el mensaje proporcionado
-  console.log("Committing...");
-  execSync(`git commit -m "${message}"`, { stdio: "inherit" });
+  // ¿Hay algo staged?
+  const diffCheck = spawnSync("git", ["diff", "--cached", "--quiet"], { shell: false });
+  const hasStagedChanges = diffCheck.status !== 0; // status 0 = sin cambios
 
-  // Paso 3: Ejecutar standard-version
-  // Esto:
-  // - Detecta commits (feat, fix, etc.)
-  // - Incrementa versión en VERSION y package.json
-  // - Crea/actualiza CHANGELOG.md
-  // - Ejecuta sync-version.js como precommit hook
-  // - Hace commit automático de cambios
-  console.log("Releasing...");
-  execSync("npx standard-version", { stdio: "inherit" });
+  if (hasStagedChanges) {
+    console.log("Committing your changes...");
+    run("git", ["commit", "-m", message]);
+  } else {
+    console.log("No hay cambios para comitear. Saltando commit del usuario.");
+  }
 
-  // Paso 4: Hacer push de commits y tags a GitHub
-  console.log("Pushing...");
-  execSync("git push && git push --tags", { stdio: "inherit" });
+  // 2) standard-version hace SU commit de release + tag
+  console.log("Running standard-version (release commit + tag)...");
+  run("npx", ["standard-version"]);
 
-  console.log("✓ Done!");
-} catch (error) {
-  console.error("✗ Error:", error.message);
+  // 3) push de commits y tags
+  console.log("Pushing commits and tags...");
+  run("git", ["push"]);
+  run("git", ["push", "--tags"]);
+
+  console.log("✓ Done! (dos commits: tu cambio y chore(release))");
+} catch (err) {
+  console.error("✗ Error:", err.message || err);
   process.exit(1);
 }

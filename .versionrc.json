@@ -10,6 +10,6 @@
     }
   ],
   "scripts": {
-    "precommit": "node scripts/sync-version.js"
+    "prerelease": "node scripts/sync-version.js"
   }
 }
