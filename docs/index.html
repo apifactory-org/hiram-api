@@ -1,34 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
-    <title>hiram-api - Swagger UI</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Título y Descripción -->
+    <title>hiram-api</title>
+    <meta
+      name="description"
+      content="Permite crear y gestionar workspaces con especificaciones agnósticas, editando archivos, validando contenido y obteniendo cambios en tiempo real."
+    />
+    <meta
+      name="keywords"
+      content="API, editor, especificación, OpenAPI, AsyncAPI"
+    />
+    <meta name="author" content="Miguel Angel Céspedes Fernandez" />
+    <meta name="language" content="Spanish" />
+
+    <!-- Open Graph (Facebook, LinkedIn, etc.) -->
+    <meta property="og:title" content="hiram-api" />
+    <meta
+      property="og:description"
+      content="Permite crear y gestionar workspaces con especificaciones agnósticas, editando archivos, validando contenido y obteniendo cambios en tiempo real."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://apifactory-org.github.io/hiram-api/"
+    />
+    <meta property="og:site_name" content="hiram-api" />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/apifactory-org/hiram-api/main/docs/logo.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="hiram-api" />
+    <meta
+      name="twitter:description"
+      content="Permite crear y gestionar workspaces con especificaciones agnósticas, editando archivos, validando contenido y obteniendo cambios en tiempo real."
+    />
+    <meta
+      name="twitter:image"
+      content="https://raw.githubusercontent.com/apifactory-org/hiram-api/main/docs/logo.png"
+    />
+    <meta name="twitter:creator" content="@apifactory" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://apifactory-org.github.io/hiram-api/" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://raw.githubusercontent.com/apifactory-org/hiram-api/main/docs/favicon.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://raw.githubusercontent.com/apifactory-org/hiram-api/main/docs/apple-touch-icon.png"
+    />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#007bff" />
+
+    <!-- Styling -->
     <link
       rel="stylesheet"
       type="text/css"
       href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3/swagger-ui.css"
     />
-    <link
-      rel="icon"
-      type="image/png"
-      href="https://fastapi.tiangolo.com/img/favicon.png"
-      sizes="32x32"
-    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Montserrat, Helvetica, Arial, sans-serif;
+      }
+      .topbar {
+        background-color: #fafafa;
+        padding: 10px 0;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+      }
+      .topbar-inner {
+        max-width: 1460px;
+        margin: 0 auto;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+      }
+      .links a {
+        margin-left: 20px;
+        color: #007bff;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .links a:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="logo">📋 hiram-api</div>
+        <div class="links">
+          <a href="https://github.com/apifactory-org/hiram-api" target="_blank"
+            >GitHub</a
+          >
+          <a
+            href="https://github.com/apifactory-org/hiram-api#documentaci%C3%B3n-adicional"
+            target="_blank"
+            >Docs</a
+          >
+          <a
+            href="https://github.com/apifactory-org/hiram-api/issues"
+            target="_blank"
+            >Issues</a
+          >
+        </div>
+      </div>
+    </div>
+
     <div id="swagger-ui"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3/swagger-ui-standalone-preset.js"></script>
     <script>
       const ui = SwaggerUIBundle({
-        url: "../specs/openapi.yaml",
+        url: "https://raw.githubusercontent.com/apifactory-org/hiram-api/main/specs/openapi.yaml",
         dom_id: "#swagger-ui",
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIBundle.SwaggerUIStandalonePreset,
-        ],
-        layout: "BaseLayout",
+        deepLinking: true,
+        presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+        plugins: [SwaggerUIBundle.plugins.DownloadUrl],
+        layout: "StandaloneLayout",
+        onComplete: function () {
+          console.log("Swagger UI cargado correctamente");
+        },
       });
+
+      window.onload = function () {
+        window.ui = ui;
+      };
     </script>
   </body>
 </html>
