@@ -70,7 +70,7 @@ Crear una plataforma universal que:
 
 ### Roadmap
 
-- **v1.0.0-alpha** - Especificación y diseño (actual)
+- **v0.1.0-alpha** - Especificación y diseño (actual)
 - **v1.0.0-beta** - Primer prototipo funcional
 - **v1.0.0** - MVP en producción
 - **v2.0.0** - Colaboración real-time
@@ -181,6 +181,6 @@ Este proyecto está bajo la [Licencia MIT](LICENSE).
 ---
 
 **Estado:** Early Stage
-**Versión:** 1.0.0-alpha
+**Versión:** 0.1.0-alpha
 **Última actualización:** Octubre 2025
 **Licencia:** MIT

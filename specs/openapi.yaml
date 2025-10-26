@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: hiram-api
-  version: 1.0.0-alpha
+  version: 0.1.0-alpha
   description: Permite crear y gestionar workspaces con especificaciones agnósticas, editando archivos, validando contenido y obteniendo cambios en tiempo real.
   contact:
     name: Miguel Angel Céspedes Fernandez

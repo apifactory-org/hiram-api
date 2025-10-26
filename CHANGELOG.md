@@ -30,7 +30,7 @@ y este proyecto sigue [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [1.0.0-alpha] - 2025-10-01
+## [0.1.0-alpha] - 2025-10-01
 
 ### Added - Especificación
 
@@ -155,7 +155,7 @@ Para sugerir cambios a la especificación o proponer features:
 ### Versiones
 
 - 📋 [Unreleased](#unreleased) - Cambios en desarrollo
-- 📊 [1.0.0-alpha](#100-alpha---2025-10-01) - Release actual
+- 📊 [0.1.0-alpha](#100-alpha---2025-10-01) - Release actual
 - 🔮 [Futuras](#versiones-futuras) - Planeadas
 
 ### Enlaces
@@ -187,7 +187,7 @@ Seguimos [Semantic Versioning 2.0.0](https://semver.org/):
 ```
 MAJOR.MINOR.PATCH-PRERELEASE
 
-Ejemplo: 1.0.0-alpha, 1.0.0-beta, 1.0.0, 1.1.0, 2.0.0
+Ejemplo: 0.1.0-alpha, 1.0.0-beta, 1.0.0, 1.1.0, 2.0.0
 ```
 
 - **MAJOR:** Cambios incompatibles (breaking changes)
@@ -233,6 +233,6 @@ Eres parte de esto. ¡Gracias!
 
 ---
 
-**Última actualización:** Octubre 2025  
-**Licencia:** MIT  
+**Última actualización:** Octubre 2025
+**Licencia:** MIT
 **Mantenedor:** Miguel Angel Céspedes Fernandez

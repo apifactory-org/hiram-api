@@ -41,7 +41,7 @@ Abre un issue con:
 **Entorno:**
 - OS: [ej. Ubuntu 22.04, macOS 14]
 - Node version: [ej. 18.0.0]
-- hiram-api version: [ej. 1.0.0-alpha]
+- hiram-api version: [ej. 0.1.0-alpha]
 
 **Logs/Error messages:**
 [Incluye cualquier mensaje de error]
@@ -266,7 +266,7 @@ describe('Workspaces API', () => {
       slug: 'test-api',
       metadata: { typeId: 'asyncapi', specVersion: '2.0.0', entry: 'api.yaml' }
     });
-    
+
     expect(result.workspaceId).toBe('test-api');
     expect(result.status).toBe('active');
   });
