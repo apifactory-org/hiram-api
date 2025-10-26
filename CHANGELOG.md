@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/apifactory-org/hiram-api/compare/v0.1.1...v0.1.2) (2025-10-26)
+
+
+### Features
+
+* **test:** prueba de automatización de versiones ([a51d241](https://github.com/apifactory-org/hiram-api/commit/a51d24191360cf6fa819c202c39fb676d626b8b7))
+
+
+### Bug Fixes
+
+* **openapi:** mover externalDocs al nivel raíz ([443e5ac](https://github.com/apifactory-org/hiram-api/commit/443e5ac58a27c8b4e0731ac1c94258fb715f4750))
+
 ### 0.1.1 (2025-10-26)
 
 
