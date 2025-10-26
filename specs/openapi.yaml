@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: hiram-api
-  version: 0.1.8
+  version: 0.1.10
   description: >-
     Permite crear y gestionar workspaces con especificaciones agnósticas,
     editando archivos, validando contenido y obteniendo cambios en tiempo real.
@@ -21,6 +21,7 @@ servers:
     description: Servidor local de desarrollo
   - url: https://hiram-secure.apifactory.org
     description: Servidor de producción
+
 tags:
   - name: Workspaces
     description: Operaciones para crear, listar y gestionar workspaces
@@ -42,6 +43,7 @@ tags:
     externalDocs:
       url: https://apifactory-org.github.io/hiram-api#Realtime
       description: Documentación de Tiempo Real
+
 components:
   securitySchemes:
     bearerAuth:
