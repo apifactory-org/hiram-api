@@ -5,10 +5,15 @@
   "repository": "github:apifactory-org/hiram-api",
   "license": "MIT",
   "scripts": {
-    "release": "standard-version"
+    "format:js": "prettier --write scripts/",
+    "lint:js": "eslint scripts/",
+    "lint:fix:js": "eslint scripts/ --fix",
+    "publish": "node scripts/commit-release.js"
   },
   "devDependencies": {
+    "eslint": "^9.38.0",
     "js-yaml": "^4.1.0",
+    "prettier": "^3.6.2",
     "standard-version": "^9.5.0"
   }
 }
