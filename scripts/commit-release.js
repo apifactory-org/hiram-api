@@ -1,19 +1,19 @@
 // scripts/commit-release.js
 /**
- * Flujo con 2 commits:
- *  1) Tu commit (feat/fix/docs...)
- *  2) Commit de release automático de standard-version + tag
+ * Flujo Opción 1 (dos commits):
+ *  1) standard-version crea commit de release + tag
+ *  2) Tu commit con sufijo de versión: "… - [vX.Y.Z]"
  *
  * Uso: npm run publish -- "TYPE(scope): descripción"
  */
 
+const fs = require("fs");
 const { spawnSync } = require("child_process");
 
 function run(cmd, args = []) {
   const res = spawnSync(cmd, args, { stdio: "inherit", shell: false });
   if (res.status !== 0) {
-    const msg = `${cmd} ${args.join(" ")} failed with code ${res.status}`;
-    throw new Error(msg);
+    throw new Error(`${cmd} ${args.join(" ")} failed with code ${res.status}`);
   }
 }
 
@@ -24,33 +24,47 @@ if (!message) {
   process.exit(1);
 }
 
-try {
-  // 1) add y commit de TU cambio (solo si hay algo para comitear)
-  console.log("Adding files...");
+async function main() {
+  // 1) Release primero con la API (evita problemas de npx/.cmd)
+  let standardVersion;
+  try {
+    standardVersion = require("standard-version");
+  } catch (e) {
+    console.error("No se encontró 'standard-version'. Instálalo con:");
+    console.error("  npm i -D standard-version");
+    process.exit(1);
+  }
+
+  console.log("Running standard-version via API...");
+  await standardVersion({
+    /* puedes pasar opciones aquí si usas .versionrc */
+  });
+
+  // 2) Leer versión resultante
+  const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+  const version = pkg.version;
+
+  // 3) Tu commit con la versión en el mensaje (solo si hay cambios para comitear)
   run("git", ["add", "."]);
+  const diffStatus = spawnSync("git", ["diff", "--cached", "--quiet"]).status;
+  const hasStaged = diffStatus !== 0; // 0 = no hay cambios stageados
 
-  // ¿Hay algo staged?
-  const diffCheck = spawnSync("git", ["diff", "--cached", "--quiet"], { shell: false });
-  const hasStagedChanges = diffCheck.status !== 0; // status 0 = sin cambios
-
-  if (hasStagedChanges) {
-    console.log("Committing your changes...");
-    run("git", ["commit", "-m", message]);
+  if (hasStaged) {
+    const fullMsg = `${message} - [v${version}]`;
+    console.log(`Committing your changes as: "${fullMsg}"`);
+    run("git", ["commit", "-m", fullMsg]);
   } else {
     console.log("No hay cambios para comitear. Saltando commit del usuario.");
   }
 
-  // 2) standard-version hace SU commit de release + tag
-  console.log("Running standard-version (release commit + tag)...");
-  run("npx", ["standard-version"]);
-
-  // 3) push de commits y tags
-  console.log("Pushing commits and tags...");
+  // 4) Push commits y tags
   run("git", ["push"]);
   run("git", ["push", "--tags"]);
 
-  console.log("✓ Done! (dos commits: tu cambio y chore(release))");
-} catch (err) {
-  console.error("✗ Error:", err.message || err);
-  process.exit(1);
+  console.log(`✓ Done! Release v${version} creado y commit del usuario añadido.`);
 }
+
+main().catch((err) => {
+  console.error("✗ Error:", err && err.message ? err.message : err);
+  process.exit(1);
+});
