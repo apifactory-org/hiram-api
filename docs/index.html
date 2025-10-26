@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hiram-api - Swagger UI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3/swagger-ui.css"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://fastapi.tiangolo.com/img/favicon.png"
+      sizes="32x32"
+    />
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+    <script>
+      const ui = SwaggerUIBundle({
+        url: "../specs/openapi.yaml",
+        dom_id: "#swagger-ui",
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIBundle.SwaggerUIStandalonePreset,
+        ],
+        layout: "BaseLayout",
+      });
+    </script>
+  </body>
+</html>
