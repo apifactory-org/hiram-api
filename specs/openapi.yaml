@@ -1,8 +1,10 @@
 openapi: 3.0.3
 info:
   title: hiram-api
-  version: 0.1.0-alpha
-  description: Permite crear y gestionar workspaces con especificaciones agnósticas, editando archivos, validando contenido y obteniendo cambios en tiempo real.
+  version: 0.1.1
+  description: >-
+    Permite crear y gestionar workspaces con especificaciones agnósticas,
+    editando archivos, validando contenido y obteniendo cambios en tiempo real.
   contact:
     name: Miguel Angel Céspedes Fernandez
     email: miguelcespedes@outlook.com
@@ -53,7 +55,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
           example:
             code: NOT_FOUND
             message: El workspace no existe
@@ -63,7 +65,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
           example:
             code: BAD_REQUEST
             message: Parámetros inválidos en la solicitud
@@ -75,7 +77,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
           example:
             code: UNAUTHORIZED
             message: Token JWT inválido o expirado
@@ -85,7 +87,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
           example:
             code: CONFLICT
             message: El workspace ya existe
@@ -113,13 +115,15 @@ components:
           description: Descripción del tipo de especificación
         latestVersion:
           type: string
-          example: "2.6.0"
+          example: 2.6.0
           description: Última versión soportada del tipo
         supportedVersions:
           type: array
           items:
             type: string
-          example: ["2.0.0", "2.6.0"]
+          example:
+            - 2.0.0
+            - 2.6.0
           description: Todas las versiones soportadas del tipo
     Workspace:
       type: object
@@ -160,7 +164,7 @@ components:
           default: active
           description: Estado del workspace
         metadata:
-          $ref: "#/components/schemas/WorkspaceMetadata"
+          $ref: '#/components/schemas/WorkspaceMetadata'
     WorkspaceMetadata:
       type: object
       required:
@@ -171,11 +175,15 @@ components:
         typeId:
           type: string
           example: asyncapi
-          description: Identificador del tipo de especificación (referencia a WorkspaceType.id)
+          description: >-
+            Identificador del tipo de especificación (referencia a
+            WorkspaceType.id)
         specVersion:
           type: string
-          description: Versión específica del tipo (ej. 3.0.3 para OAS3, 2.6.0 para AsyncAPI)
-          example: "2.0.0"
+          description: >-
+            Versión específica del tipo (ej. 3.0.3 para OAS3, 2.6.0 para
+            AsyncAPI)
+          example: 2.0.0
         entry:
           type: string
           description: Archivo raíz/principal de la especificación
@@ -222,7 +230,7 @@ components:
           example: user-service
           description: Slug único para el workspace
         metadata:
-          $ref: "#/components/schemas/WorkspaceMetadata"
+          $ref: '#/components/schemas/WorkspaceMetadata'
     UpdateWorkspaceRequest:
       type: object
       description: Solicitud para actualizar un workspace
@@ -312,7 +320,7 @@ components:
           type: string
         message:
           type: string
-          example: "chore: update schemas"
+          example: 'chore: update schemas'
         branch:
           type: string
           default: main
@@ -349,7 +357,7 @@ components:
           description: Nueva ruta destino
         message:
           type: string
-          example: "refactor: rename paths"
+          example: 'refactor: rename paths'
     ValidateRequest:
       type: object
       properties:
@@ -409,7 +417,7 @@ paths:
       summary: Listar tipos de especificaciones soportadas
       description: Retorna los tipos de especificaciones que hiram-api soporta
       responses:
-        "200":
+        '200':
           description: Lista de tipos de workspace disponibles
           content:
             application/json:
@@ -419,14 +427,14 @@ paths:
                   items:
                     type: array
                     items:
-                      $ref: "#/components/schemas/WorkspaceType"
+                      $ref: '#/components/schemas/WorkspaceType'
   /workspaces:
     get:
       tags:
         - Workspaces
       summary: Listar workspaces del usuario autenticado
       responses:
-        "200":
+        '200':
           description: Lista de workspaces
           content:
             application/json:
@@ -436,21 +444,21 @@ paths:
                   items:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Workspace"
+                      $ref: '#/components/schemas/Workspace'
               example:
                 items:
                   - workspaceId: user-service
                     name: User Service API
                     repo: org/user-service-spec
-                    createdAt: "2025-10-01T10:30:00Z"
-                    updatedAt: "2025-10-01T10:30:00Z"
+                    createdAt: '2025-10-01T10:30:00Z'
+                    updatedAt: '2025-10-01T10:30:00Z'
                     status: active
                     metadata:
                       typeId: asyncapi
                       specVersion: 2.0.0
                       entry: api.yaml
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
     post:
       tags:
         - Workspaces
@@ -460,7 +468,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateWorkspaceRequest"
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
             example:
               name: User Service API
               slug: user-service
@@ -470,25 +478,25 @@ paths:
                 entry: api.yaml
                 description: API de servicio de usuarios
       responses:
-        "201":
+        '201':
           description: Workspace creado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Workspace"
+                $ref: '#/components/schemas/Workspace'
               example:
                 workspaceId: user-service
                 name: User Service API
                 repo: org/user-service-spec
-                createdAt: "2025-10-01T10:30:00Z"
-                updatedAt: "2025-10-01T10:30:00Z"
+                createdAt: '2025-10-01T10:30:00Z'
+                updatedAt: '2025-10-01T10:30:00Z'
                 status: active
                 metadata:
                   typeId: asyncapi
                   specVersion: 2.0.0
                   entry: api.yaml
-        "409":
-          $ref: "#/components/responses/Conflict"
+        '409':
+          $ref: '#/components/responses/Conflict'
   /workspaces/{workspaceId}:
     parameters:
       - name: workspaceId
@@ -502,27 +510,27 @@ paths:
         - Workspaces
       summary: Obtener un workspace (incluye metadata)
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Workspace"
+                $ref: '#/components/schemas/Workspace'
               example:
                 workspaceId: user-service
                 name: User Service API
                 repo: org/user-service-spec
-                createdAt: "2025-10-01T10:30:00Z"
-                updatedAt: "2025-10-01T10:30:00Z"
+                createdAt: '2025-10-01T10:30:00Z'
+                updatedAt: '2025-10-01T10:30:00Z'
                 status: active
                 metadata:
                   typeId: asyncapi
                   specVersion: 2.0.0
                   entry: api.yaml
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/NotFound"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
     patch:
       tags:
         - Workspaces
@@ -532,20 +540,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateWorkspaceRequest"
+              $ref: '#/components/schemas/UpdateWorkspaceRequest'
       responses:
-        "200":
+        '200':
           description: Workspace actualizado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Workspace"
+                $ref: '#/components/schemas/Workspace'
     delete:
       tags:
         - Workspaces
       summary: Eliminar/archivar workspace (soft-delete recomendado)
       responses:
-        "204":
+        '204':
           description: Workspace eliminado o archivado
   /workspaces/{workspaceId}/files:
     parameters:
@@ -566,14 +574,14 @@ paths:
         - Files
       summary: Obtener árbol de archivos del workspace
       responses:
-        "200":
+        '200':
           description: Árbol de archivos
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TreeResponse"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/TreeResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /workspaces/{workspaceId}/files/content:
     parameters:
       - name: workspaceId
@@ -599,14 +607,14 @@ paths:
         - Files
       summary: Leer contenido de un archivo
       responses:
-        "200":
+        '200':
           description: Contenido del archivo
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FileReadResponse"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/FileReadResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
     put:
       tags:
         - Files
@@ -616,29 +624,33 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FileSaveRequest"
+              $ref: '#/components/schemas/FileSaveRequest'
             example:
               path: src/api.yaml
-              content: "asyncapi: 2.0.0\ninfo:\n  title: User Service\n  version: 1.0.0"
-              message: "feat: add user service spec"
+              content: |-
+                asyncapi: 2.0.0
+                info:
+                  title: User Service
+                  version: 1.0.0
+              message: 'feat: add user service spec'
               branch: main
       responses:
-        "200":
+        '200':
           description: Archivo guardado correctamente
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FileSaveResponse"
+                $ref: '#/components/schemas/FileSaveResponse'
               example:
                 ok: true
                 commit:
                   sha: abc123def456
                   url: https://github.com/org/user-service-spec/commit/abc123def456
                 newSha: abc123def456
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "409":
-          $ref: "#/components/responses/Conflict"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
     delete:
       tags:
         - Files
@@ -655,22 +667,22 @@ paths:
           required: false
           schema:
             type: string
-            example: "chore: remove file"
+            example: 'chore: remove file'
       responses:
-        "200":
+        '200':
           description: Archivo eliminado exitosamente
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicOk"
+                $ref: '#/components/schemas/BasicOk'
               example:
                 ok: true
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/Conflict"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /workspaces/{workspaceId}/files/move:
     parameters:
       - name: workspaceId
@@ -688,26 +700,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FileMoveRequest"
+              $ref: '#/components/schemas/FileMoveRequest'
       responses:
-        "200":
+        '200':
           description: Archivo movido/renombrado exitosamente
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicOk"
-        "404":
+                $ref: '#/components/schemas/BasicOk'
+        '404':
           description: Archivo de origen no encontrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        "409":
+                $ref: '#/components/schemas/Error'
+        '409':
           description: Conflicto (ej. destino ya existe)
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /workspaces/{workspaceId}/validate:
     parameters:
       - name: workspaceId
@@ -721,32 +733,32 @@ paths:
         - Validation
       summary: Validar la especificación del workspace
       description: >
-        Valida la especificación según su tipo (OAS3 o AsyncAPI).
-        El backend selecciona automáticamente el validador basado en `metadata.type`.
+        Valida la especificación según su tipo (OAS3 o AsyncAPI). El backend
+        selecciona automáticamente el validador basado en `metadata.type`.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ValidateRequest"
+              $ref: '#/components/schemas/ValidateRequest'
             example:
               ref: main
               entry: api.yaml
       responses:
-        "200":
+        '200':
           description: Resultado de validación
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ValidateResponse"
+                $ref: '#/components/schemas/ValidateResponse'
               example:
                 valid: true
                 errors: []
                 warnings: []
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/NotFound"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /workspaces/{workspaceId}/bundle:
     parameters:
       - name: workspaceId
@@ -781,7 +793,7 @@ paths:
               - yaml
             default: json
       responses:
-        "200":
+        '200':
           description: Bundle generado exitosamente
           content:
             application/json:
@@ -790,12 +802,12 @@ paths:
             application/yaml:
               schema:
                 type: string
-        "404":
+        '404':
           description: Workspace o archivo de entrada no encontrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /events:
     get:
       tags:
@@ -810,7 +822,7 @@ paths:
             type: string
             example: user-service
       responses:
-        "200":
+        '200':
           description: Conexión SSE establecida
           content:
             text/event-stream:
