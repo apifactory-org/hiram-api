@@ -24,7 +24,7 @@ Proyecto en fase temprana. Actualmente se define la especificación de API media
 
 ## ¿Qué es hiram-api?
 
-hiram-api es una **plataforma agnóstica** para crear workspaces y gestionar especificaciones de APIs en múltiples formatos (OpenAPI, AsyncAPI, GraphQL, etc.).
+hiram-api es una **plataforma agnóstica** para crear workspaces y gestionar especificaciones de APIs. Extensible a cualquier formato o estándar.
 
 **Características principales (planeadas):**
 
@@ -79,23 +79,24 @@ Crear una plataforma universal que:
 
 ## 📚 Especificación
 
-La especificación técnica está en OpenAPI 3.0.3:
+La especificación está en formato OpenAPI 3.0.3:
 
 - **Archivo**: `specs/openapi.yaml`
 - **Formato**: OpenAPI 3.0.3
 - **Estado**: Completa
 
-### Ver especificación:
+### Acceder a la especificación
 
 ```bash
 # Clonar repositorio
 git clone https://github.com/apifactory-org/hiram-api.git
 cd hiram-api
 
-# Ver en editor online
-# Copiar contenido de specs/openapi.yaml a:
-# https://editor.swagger.io/
+# La especificación está en:
+cat specs/openapi.yaml
 ```
+
+Puedes visualizarla con cualquier editor compatible con OpenAPI 3.0.3.
 
 ### Endpoints Principales (Diseño)
 
@@ -170,13 +171,16 @@ Este proyecto está bajo la [Licencia MIT](LICENSE).
 ## 📖 Documentación Adicional
 
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Guía para contribuidores
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - Código de conducta
+- [SECURITY.md](SECURITY.md) - Política de seguridad
+- [CHANGELOG.md](CHANGELOG.md) - Historial de cambios
 - [LICENSE](LICENSE) - Licencia MIT
 - [TERMS.md](TERMS.md) - Términos y políticas
 - [specs/openapi.yaml](specs/openapi.yaml) - Especificación OpenAPI
 
 ---
 
-**Estado:** Early Stage  
-**Versión:** 1.0.0-alpha  
-**Última actualización:** Octubre 2025  
+**Estado:** Early Stage
+**Versión:** 1.0.0-alpha
+**Última actualización:** Octubre 2025
 **Licencia:** MIT
