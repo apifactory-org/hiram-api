@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.13](https://github.com/apifactory-org/hiram-api/compare/v0.1.12...v0.1.13) (2025-10-26)
+
+
+### Bug Fixes
+
+* **openapi:** mover externalDocs al nivel raíz ([79eff97](https://github.com/apifactory-org/hiram-api/commit/79eff97801cea020b7f9d98cc969da5fdceddd36))
+* **openapi:** mover externalDocs al nivel raíz ([082cbb4](https://github.com/apifactory-org/hiram-api/commit/082cbb48e460da35ac57703806265791bb3bdb49))
+
 ### [0.1.12](https://github.com/apifactory-org/hiram-api/compare/v0.1.11...v0.1.12) (2025-10-26)
 
 
