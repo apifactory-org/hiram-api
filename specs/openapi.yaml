@@ -6,10 +6,10 @@ info:
   contact:
     name: Miguel Angel Céspedes Fernandez
     email: miguelcespedes@outlook.com
-    url: https://github.com/apifactory-org/hiram-api
+    url: https://github.com/miguelcespedes
   license:
     name: MIT
-  termsOfService: https://github.com/apifactory-org/hiram-api/blob/main/TERMS.md
+  termsOfService: https://github.com/apifactory-org/hiram-api/blob/main/LICENSE
 servers:
   - url: http://127.0.0.1:8080
     description: Servidor local de desarrollo
