@@ -7,15 +7,9 @@
     {
       "filename": "package.json",
       "type": "json"
-    },
-    {
-      "filename": "specs/openapi.yaml",
-      "type": "plain-text",
-      "updater": "scripts/openapi-updater.js"
     }
   ],
-  "skip": {
-    "commit": false,
-    "tag": true
+  "scripts": {
+    "postbump": "node scripts/sync-version.js"
   }
 }
