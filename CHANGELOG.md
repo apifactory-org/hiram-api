@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.14](https://github.com/apifactory-org/hiram-api/compare/v0.1.13...v0.1.14) (2025-10-26)
+
+
+### Features
+
+* **validator:** adding publish function - [v0.1.13] ([42b9243](https://github.com/apifactory-org/hiram-api/commit/42b9243389bdf24104a3ccb861e879b1b79fa3d2))
+
 ### [0.1.13](https://github.com/apifactory-org/hiram-api/compare/v0.1.12...v0.1.13) (2025-10-26)
 
 
