@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
   title: hiram-api
-  version: 0.1.10
+  version: 0.1.11
   description: >-
     Permite crear y gestionar workspaces con especificaciones agnósticas,
     editando archivos, validando contenido y obteniendo cambios en tiempo real.
   contact:
-    name: Miguel Angel Céspedes Fernandez
+    name: API Factory
     email: miguelcespedes@outlook.com
     url: https://github.com/apifactory-org/hiram-api
   license:
@@ -21,7 +21,6 @@ servers:
     description: Servidor local de desarrollo
   - url: https://hiram-secure.apifactory.org
     description: Servidor de producción
-
 tags:
   - name: Workspaces
     description: Operaciones para crear, listar y gestionar workspaces
@@ -43,7 +42,6 @@ tags:
     externalDocs:
       url: https://apifactory-org.github.io/hiram-api#Realtime
       description: Documentación de Tiempo Real
-
 components:
   securitySchemes:
     bearerAuth:
